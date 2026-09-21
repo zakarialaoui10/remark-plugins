@@ -236,6 +236,9 @@ importers:
       hast-util-from-html-isomorphic:
         specifier: ^2.0.0
         version: 2.0.0
+      mind-elixir:
+        specifier: 6.0.0-next.4
+        version: 6.0.0-next.4
       unist-util-visit:
         specifier: ^5.1.0
         version: 5.1.0
@@ -1708,6 +1711,9 @@ packages:
 
   micromark@4.0.2:
     resolution: {integrity: sha512-zpe98Q6kvavpCr1NPVSCMebCKfD7CA2NqZ+rykeNhONIJBpc1tFKt9hucLGwha3jNTNI8lHpctWJWoimVF4PfA==}
+
+  mind-elixir@6.0.0-next.4:
+    resolution: {integrity: sha512-CD0Uh6Y5HHxKSs80H+agnHrfJ+lKBgxew5XzAel1+7fnChYK5gM9yhoGF4me13iPSR6yo7qbLo3daoILzq8mXQ==}
 
   mrmime@2.0.1:
     resolution: {integrity: sha512-Y3wQdFg2Va6etvQ5I82yUhGdsKrcYox6p7FfL1LbK2J4V01F9TGlepTIhnK24t7koZibmg82KGglhA1XK5IsLQ==}
@@ -4026,6 +4032,8 @@ snapshots:
       micromark-util-types: 2.0.2
     transitivePeerDependencies:
       - supports-color
+
+  mind-elixir@6.0.0-next.4: {}
 
   mrmime@2.0.1: {}
 

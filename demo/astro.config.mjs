@@ -1,7 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
-import MindElixir from '@zikojs/remark-plugin-mind-elixir'
+import MindElixir from 'remark-plugin-mind-elixir'
 
 // https://astro.build/config
 export default defineConfig({
