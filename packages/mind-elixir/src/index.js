@@ -5,7 +5,7 @@ import { yaml2MindElixirData } from '@zikojs/mind-elixir/utils'
 
 const remarkElixirMind = ({
   useCdn = true,
-} = {}) => {
+} = {}) => () => {
   return function transformer(tree) {
     let hasElixirMind = false
 
@@ -45,23 +45,20 @@ const remarkElixirMind = ({
 @import url('https://esm.sh/mind-elixir/style')
 </style>
 
-<script type="module">
+<script type="module" data-engine="zikojs, remark, mind-elixir">
 import { MindMap } from 'https://esm.sh/@zikojs/mind-elixir@latest/src/mind/main.js'
-
-document.querySelectorAll('[data-elixir-mind]').forEach((element) => {
-  const raw = element.dataset.xmindBody
-
-  if (!raw) return
-
-  const nodeData = JSON.parse(raw)
-
-  const map = MindMap({
-    height: '400px',
-    direction: 2
-  }, nodeData)
-
-  map.mount(element)
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-elixir-mind]').forEach((element) => {
+        const raw = element.dataset.xmindBody
+        // const config = element.dataset?.xmindConfig
+        if (!raw) return
+        const nodeData = JSON.parse(raw)
+        // const nodeConfig = JSON.parse(config)
+        const map = MindMap({}, nodeData)
+        map.mount(element)
+    })
 })
+
 </script>
 `
     })

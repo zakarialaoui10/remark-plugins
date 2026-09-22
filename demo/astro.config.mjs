@@ -6,7 +6,7 @@ import MindElixir from 'remark-mind-elixir'
 // https://astro.build/config
 export default defineConfig({
 	markdown:{
-		remarkPlugins:[MindElixir]
+		remarkPlugins:[MindElixir()]
 	},
 	integrations: [
 		starlight({

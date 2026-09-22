@@ -30,6 +30,15 @@ children:
       - topic: Mind-Elixir
 ```
 
+
+```elixir-mind
+topic: ZikoJS Architecture
+direction: 2
+tags:
+  - ziko
+  - javascript
+```
+
 ## Further reading
 
 - Read [about how-to guides](https://diataxis.fr/how-to-guides/) in the Diátaxis framework
