@@ -12,7 +12,6 @@ direction: 2
 tags:
   - ziko
   - javascript
-  - TTTTTTS
 
 children:
   - topic: Core UI Engine

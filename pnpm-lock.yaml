@@ -211,11 +211,7 @@ catalogs:
 
 importers:
 
-  .:
-    dependencies:
-      '@zikojs/mind-elixir':
-        specifier: 0.6.0
-        version: 0.6.0
+  .: {}
 
   demo:
     dependencies:
@@ -237,6 +233,9 @@ importers:
 
   packages/mind-elixir:
     dependencies:
+      '@zikojs/mind-elixir':
+        specifier: ^0.6.1
+        version: 0.6.1
       hast-util-from-html-isomorphic:
         specifier: ^2.0.0
         version: 2.0.0
@@ -1040,8 +1039,8 @@ packages:
   '@ungap/structured-clone@1.4.0':
     resolution: {integrity: sha512-1mEZtMKPM09vDmQt5y7YvmN2+DFTP7Tg0EWXdic8/C6VRnpb33e4ghisCIE3WZjsE2N8mf+QV1Zqh7ZFYLWInQ==}
 
-  '@zikojs/mind-elixir@0.6.0':
-    resolution: {integrity: sha512-kXy/LaCoiNSAkvlsE/QqoRSl7my2AAYJclYZ4OILz4mJ6em/PblGatujkTfLi4nm1uM9PTc4FI8Z6ZujG3i9/g==}
+  '@zikojs/mind-elixir@0.6.1':
+    resolution: {integrity: sha512-F+m34m08ATL1G5BmL1hdrC0xdM3DLaZFpjn5/UlnZ13PJ705fBiC3DTkKPB+4CAIuu8PP8FiaMHCBd0bEyY2oQ==}
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -2981,7 +2980,7 @@ snapshots:
 
   '@ungap/structured-clone@1.4.0': {}
 
-  '@zikojs/mind-elixir@0.6.0':
+  '@zikojs/mind-elixir@0.6.1':
     dependencies:
       mind-elixir: 6.0.0-next.4
       yaml: 2.9.1
