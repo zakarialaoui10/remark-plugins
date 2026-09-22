@@ -1,6 +1,6 @@
 {
-  "name": "remark-plugin-mind-elixir",
-  "version": "0.2.0",
+  "name": "remark-mind-elixir",
+  "version": "0.1.0",
   "description": "",
   "keywords": [
     "remark",

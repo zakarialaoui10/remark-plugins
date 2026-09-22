@@ -224,7 +224,7 @@ importers:
       astro:
         specifier: ^7.2.10
         version: 7.3.3(@astrojs/markdown-remark@7.3.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@24.13.6)(yaml@2.9.1)
-      remark-plugin-mind-elixir:
+      remark-mind-elixir:
         specifier: workspace:*
         version: link:../packages/mind-elixir
       sharp:
