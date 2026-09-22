@@ -7,23 +7,28 @@ Guides lead a user through a specific task they want to accomplish, often with a
 Writing a good guide requires thinking about what your users are trying to do.
 
 ```elixir-mind
----
-direction : 2
----
+topic: ZikoJS Architecture
+direction: 2
+tags:
+  - ziko
+  - javascript
+  - TTTTTTS
 
-Root
-    Child 1
-        Child 11
-        Child 12
-        Child 13
-    Child 2
-        Child 21
-        Child 22
-        Child 23
-    Child 3
-        Child 31
-        Child 32
-        Child 33
+children:
+  - topic: Core UI Engine
+    tags:
+      - core
+
+    children:
+      - topic: UIElement
+      - topic: Hooks
+      - topic: Hyperscript
+
+  - topic: Ecosystem
+    children:
+      - topic: Three.js
+      - topic: Chart.js
+      - topic: Mind-Elixir
 ```
 
 ## Further reading
