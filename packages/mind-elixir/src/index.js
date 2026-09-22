@@ -3,7 +3,9 @@ import { parse } from 'yaml'
 
 import { yaml2MindElixirData } from '@zikojs/mind-elixir/utils'
 
-const remarkElixirMind = () => {
+const remarkElixirMind = ({
+  useCdn = true,
+} = {}) => {
   return function transformer(tree) {
     let hasElixirMind = false
 
@@ -36,7 +38,7 @@ const remarkElixirMind = () => {
 
     if (!hasElixirMind) return
 
-    tree.children.push({
+    useCdn && tree.children.push({
       type: 'html',
       value: `
 <style>

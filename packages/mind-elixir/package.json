@@ -1,6 +1,6 @@
 {
   "name": "remark-mind-elixir",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "",
   "keywords": [
     "remark",
@@ -24,8 +24,7 @@
       "types": "./src/index.d.ts"
     },
     "./client": {
-      "import": "./src/index.js",
-      "types": "./src/index.d.ts"
+      "import": "./src/client.js"
     }
   },
   "license": "MIT",
