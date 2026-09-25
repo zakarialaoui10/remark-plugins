@@ -45,6 +45,71 @@ const file = await remark()
 console.log(String(file))
 ```
 
+## Usage with Astro
+
+Install the plugin in your Astro project:
+
+```bash
+npm install remark-mind-elixir
+```
+
+Then add it to the `markdown.remarkPlugins` configuration in `astro.config.mjs`:
+
+```js
+// @ts-check
+import { defineConfig } from 'astro/config'
+import remarkMindElixir from 'remark-mind-elixir'
+
+export default defineConfig({
+  markdown: {
+    remarkPlugins: [remarkMindElixir()],
+  },
+})
+```
+
+You can then use `elixir-mind` blocks directly in your Markdown or MDX pages:
+
+````markdown
+# JavaScript
+
+```elixir-mind
+root:
+  topic: JavaScript
+  children:
+    - topic: Browser
+      children:
+        - topic: DOM
+        - topic: Web APIs
+    - topic: Node.js
+    - topic: Deno
+```
+````
+
+The plugin transforms the block during Astro's Markdown processing and injects the client-side Mind Elixir runtime automatically.
+
+### Astro with CDN disabled
+
+By default, `remark-mind-elixir` loads the client runtime from `esm.sh`.
+
+You can disable this behavior:
+
+```js
+import { defineConfig } from 'astro/config'
+import remarkMindElixir from 'remark-mind-elixir'
+
+export default defineConfig({
+  markdown: {
+    remarkPlugins: [
+      remarkMindElixir({
+        useCdn: false,
+      }),
+    ],
+  },
+})
+```
+
+When `useCdn` is disabled, your application must provide the Mind Elixir client runtime itself.
+
 ## Markdown Syntax
 
 Use an `elixir-mind` fenced code block:
@@ -73,6 +138,7 @@ Separate the configuration and data using `---`:
 ---
 direction: right
 ---
+
 root:
   topic: JavaScript
   children:
@@ -141,7 +207,7 @@ When disabled, the plugin does not inject the CDN runtime. Your application must
 
 By default, the plugin injects the Mind Elixir runtime using `esm.sh`.
 
-The generated Markdown contains a container similar to:
+The generated HTML contains a container similar to:
 
 ```html
 <div
@@ -200,4 +266,4 @@ It is built on top of ZikoJS utilities while remaining a remark plugin rather th
 
 ## License
 
-MIT
+MIT + Mind Elixir License 
