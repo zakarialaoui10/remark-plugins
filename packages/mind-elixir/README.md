@@ -1,6 +1,6 @@
 # remark-mind-elixir
 
-A [remark](https://github.com/remarkjs/remark) plugin for embedding interactive [Mind Elixir](https://mind-elixir.com/) mind maps in Markdown.
+A [remark](https://github.com/remarkjs/remark) plugin for embedding interactive [Mind Elixir](https://docs.mind-elixir.com/) mind maps in Markdown.
 
 It lets you define mind maps using YAML inside `elixir-mind` fenced code blocks and transforms them into interactive Mind Elixir maps.
 
@@ -194,7 +194,7 @@ It is built on top of ZikoJS utilities while remaining a remark plugin rather th
 ## Related Projects
 
 * [ZikoJS](https://github.com/zikojs)
-* [Mind Elixir](https://github.com/SSShooter/mind-elixir-core)
+* [Mind Elixir](https://docs.mind-elixir.com/)
 * [Remark](https://github.com/remarkjs/remark)
 * [Unified](https://unifiedjs.com/)
 
