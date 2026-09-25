@@ -2,15 +2,15 @@ import { MindMap } from '@zikojs/mind-elixir/no-css'
 
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-elixir-mind]').forEach((element) => {
-        const raw = element.dataset.xmindBody
-        // const config = element.dataset?.xmindConfig
+        const body = element.dataset.xmindBody
+        const config = element.dataset?.xmindConfig
 
-        if (!raw) return
+        if (!body) return
 
-        const nodeData = JSON.parse(raw)
-        // const nodeConfig = JSON.parse(config)
+        const nodeData = JSON.parse(body)
+        const nodeConfig = JSON.parse(config)
 
-        const map = MindMap({}, nodeData)
+        const map = MindMap({height : '400px', ...nodeConfig}, nodeData)
 
         map.mount(element)
     })

@@ -16,10 +16,10 @@ const remarkElixirMind = ({
       let config = {}, body = null;
 
       const documents = splitDocuments(node.value.trim());
-      if(documents.length === 1) body = yaml2MindElixirData(documents[0])
+      if(documents.length === 1) body = parseMindBody(documents[0])
       else {
         config = parse(documents[0])
-        body = yaml2MindElixirData(documents[1])
+        body = parseMindBody(documents[1])
       }
 
       // parent creates circular references, so serialize a clean copy
@@ -59,12 +59,12 @@ const remarkElixirMind = ({
 import { MindMap } from 'https://esm.sh/@zikojs/mind-elixir@latest/src/mind/main.js'
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-elixir-mind]').forEach((element) => {
-        const raw = element.dataset.xmindBody
-        // const config = element.dataset?.xmindConfig
-        if (!raw) return
-        const nodeData = JSON.parse(raw)
-        // const nodeConfig = JSON.parse(config)
-        const map = MindMap({}, nodeData)
+        const body = element.dataset.xmindBody
+        const config = element.dataset?.xmindConfig
+        if (!body) return
+        const nodeData = JSON.parse(body)
+        const nodeConfig = JSON.parse(config)
+        const map = MindMap({height : '400px', ...nodeConfig}, nodeData)
         map.mount(element)
     })
 })
@@ -140,4 +140,34 @@ const splitDocuments = (text) => {
   }
 
   return documents
+}
+
+// const parseMindBody = (text) => {
+//   try {
+//     return JSON.parse(text)
+//   } catch {
+//     return yaml2MindElixirData(text)
+//   }
+// }
+
+const parseMindBody = (text) => {
+  const trimmed = text.trim()
+
+  // JSON
+  try {
+    return JSON.parse(trimmed)
+  } catch {}
+
+  // JavaScript object/array
+  if (
+    trimmed.startsWith('{') ||
+    trimmed.startsWith('[')
+  ) {
+    try {
+      return Function(`"use strict"; return (${trimmed})`)()
+    } catch {}
+  }
+
+  // YAML
+  return yaml2MindElixirData(trimmed)
 }
