@@ -32,6 +32,9 @@ children:
 
 
 ```elixir-mind
+syntax : json
+---
+
 topic: ZikoJS Architecture
 direction: 2
 tags:

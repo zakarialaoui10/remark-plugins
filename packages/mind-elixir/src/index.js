@@ -1,5 +1,5 @@
 import { visit } from 'unist-util-visit'
-import { parse } from 'yaml'
+import { parse, parseAllDocuments } from "yaml";
 
 import { yaml2MindElixirData } from '@zikojs/mind-elixir/utils'
 
@@ -12,25 +12,35 @@ const remarkElixirMind = ({
     visit(tree, 'code', (node, index, parent) => {
       if (node.lang !== 'elixir-mind') return
 
-      hasElixirMind = true
+      hasElixirMind = true;
+      let config = {}, body = null;
 
-      const body = yaml2MindElixirData(node.value.trim())
+      const documents = splitDocuments(node.value.trim());
+      if(documents.length === 1) body = yaml2MindElixirData(documents[0])
+      else {
+        config = parse(documents[0])
+        body = yaml2MindElixirData(documents[1])
+      }
 
       // parent creates circular references, so serialize a clean copy
-      const serialized = JSON.stringify(body, (key, value) => {
+      const serialized_body = JSON.stringify(body, (key, value) => {
         if (key === 'parent') return undefined
         return value
       })
 
+      const serialized_config = JSON.stringify(config)
+
       // Escape the JSON for use inside an HTML attribute
-      const encoded = escapeHtmlAttribute(serialized)
+      const encoded_body = escapeHtmlAttribute(serialized_body)
+      const encoded_config = escapeHtmlAttribute(serialized_config)
 
       parent.children[index] = {
         type: 'html',
         value: `
 <div
   data-elixir-mind
-  data-xmind-body="${encoded}"
+  data-xmind-body="${encoded_body}"
+  data-xmind-config="${encoded_config}"
 ></div>
 `
       }
@@ -74,3 +84,60 @@ function escapeHtmlAttribute(value) {
 }
 
 export default remarkElixirMind
+
+const splitDocuments = (text) => {
+  const documents = []
+  let current = ''
+
+  let quote = null
+  let escaped = false
+
+  const lines = text.trim().split('\n')
+
+  for (const line of lines) {
+    const isSeparator = line.match(/^---[ \t]*$/)
+
+    if (isSeparator && !quote) {
+      if (current.trim()) {
+        documents.push(current.trim())
+      }
+      current = ''
+      continue
+    }
+
+    current += (current ? '\n' : '') + line
+
+    // Track JS string state
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i]
+
+      if (escaped) {
+        escaped = false
+        continue
+      }
+
+      if (char === '\\') {
+        escaped = true
+        continue
+      }
+
+      if (quote) {
+        if (char === quote) {
+          quote = null
+        }
+      } else if (
+        char === "'" ||
+        char === '"' ||
+        char === '`'
+      ) {
+        quote = char
+      }
+    }
+  }
+
+  if (current.trim()) {
+    documents.push(current.trim())
+  }
+
+  return documents
+}
