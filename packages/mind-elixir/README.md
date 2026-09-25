@@ -198,10 +198,6 @@ It is built on top of ZikoJS utilities while remaining a remark plugin rather th
 * [Remark](https://github.com/remarkjs/remark)
 * [Unified](https://unifiedjs.com/)
 
-<!-- ## Documentation -->
-
-<!-- See the [ZikoJS Remark Plugins documentation](https://remark.zikojs.org/) for guides, syntax references, and examples. -->
-
 ## License
 
 MIT

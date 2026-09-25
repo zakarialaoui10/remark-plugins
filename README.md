@@ -63,40 +63,6 @@ These plugins are designed to work with the broader Markdown ecosystem:
 
 ZikoJS provides the underlying components and utilities used by the plugins, while the remark plugins themselves are designed to remain usable in any compatible remark environment.
 
-## Documentation
-
-Full documentation is available at:
-
-**[ZikoJS Remark Plugins Documentation](https://remark.zikojs.org/)**
-
-## Development
-
-Clone the repository and install dependencies:
-
-```bash
-git clone https://github.com/zikojs/remark-plugins.git
-cd remark-plugins
-npm install
-```
-
-Start the documentation site:
-
-```bash
-npm run dev
-```
-
-Build the documentation:
-
-```bash
-npm run build
-```
-
-## Contributing
-
-Contributions, issues, and plugin ideas are welcome.
-
-When adding a new plugin, keep the remark transformer independent from any specific application framework and document its Markdown syntax and configuration.
-
 ## License
 
 MIT
