@@ -1,19 +1,23 @@
 {
   "name": "remark-mind-elixir",
-  "version": "0.3.1",
-  "description": "",
+  "version": "0.3.2",
+  "description": "A remark plugin for embedding interactive Mind Elixir mind maps in Markdown.",
   "keywords": [
     "remark",
-    "unified"
+    "unified",
+    "markdown",
+    "mindmap",
+    "mind-map",
+    "mind-elixir"
   ],
-  "homepage": "https://github.com/zikojs/mdx#readme",
+  "homepage": "https://github.com/zakarialaoui10/remark-plugins#remark-plugins",
   "bugs": {
-    "url": "https://github.com/zikojs/mdx/issues"
+    "url": "https://github.com/zakarialaoui10/remark-plugins/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zakarialaoui10/remark-plugins.git",
-    "directory": "packages/remark-plugin-mind-elixir"
+    "directory": "packages/mind-elixir"
   },
   "publishConfig": {
     "access": "public"
@@ -31,7 +35,7 @@
     }
   },
   "license": "MIT",
-  "author": "zakaria elalaoui",
+  "author": "Zakaria Elalaoui",
   "type": "module",
   "dependencies": {
     "@zikojs/mind-elixir": "^0.6.2",
