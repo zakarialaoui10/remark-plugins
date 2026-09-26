@@ -50,6 +50,9 @@
     "yaml": "^2.9.1",
     "ziko": "catalog:"
   },
+  "devDependencies": {
+    "unified": "catalog:"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   }

@@ -5,6 +5,7 @@ import {
   splitDocuments,
   parseMindBody,
 } from './utils.js'
+
 const remarkMindElixir = ({
   useCdn = true,
 } = {}) => {
@@ -18,21 +19,18 @@ const remarkMindElixir = ({
       let config = {}, body = null;
 
       const documents = splitDocuments(node.value.trim());
-      if(documents.length === 1) body = parseMindBody(documents[0])
+      if (documents.length === 1) body = parseMindBody(documents[0])
       else {
         config = parse(documents[0])
         body = parseMindBody(documents[1])
       }
 
-      // parent creates circular references, so serialize a clean copy
       const serialized_body = JSON.stringify(body, (key, value) => {
         if (key === 'parent') return undefined
         return value
       })
-
       const serialized_config = JSON.stringify(config)
 
-      // Escape the JSON for use inside an HTML attribute
       const encoded_body = escapeHtmlAttribute(serialized_body)
       const encoded_config = escapeHtmlAttribute(serialized_config)
 
@@ -50,13 +48,15 @@ const remarkMindElixir = ({
 
     if (!hasElixirMind) return
 
-    useCdn && tree.children.push({
-      type: 'html',
-      value: `
-<style>
-@import url('https://esm.sh/mind-elixir/style')
-</style>
+    if (useCdn) {
+      tree.children.push({
+        type: 'html',
+        value: `<style>\n@import url('https://esm.sh/mind-elixir/style')\n</style>`
+      })
 
+      tree.children.push({
+        type: 'html',
+        value: `
 <script type="module" data-engine="zikojs, remark, mind-elixir">
 import { MindMap } from 'https://esm.sh/@zikojs/mind-elixir@latest/src/mind/main.js'
 document.addEventListener('DOMContentLoaded', () => {
@@ -70,14 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
         map.mount(element)
     })
 })
-
 </script>
 `
-    })
+      })
+    }
   }
 }
 
-
-
 export default remarkMindElixir
-
