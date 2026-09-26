@@ -1,7 +1,7 @@
 {
-  "name": "remark-mind-elixir",
-  "version": "0.5.0",
-  "description": "A remark plugin for embedding interactive Mind Elixir mind maps in Markdown.",
+  "name": "rehype-mind-elixir",
+  "version": "0.1.0",
+  "description": "A rehype plugin for embedding interactive Mind Elixir mind maps in Markdown.",
   "keywords": [
     "zikojs",
     "rehype",
@@ -11,13 +11,13 @@
     "mind-map",
     "mind-elixir"
   ],
-  "homepage": "https://github.com/zakarialaoui10/remark-plugins#remark-plugins",
+  "homepage": "https://github.com/zakarialaoui10/rehype-plugins#rehype-plugins",
   "bugs": {
-    "url": "https://github.com/zakarialaoui10/remark-plugins/issues"
+    "url": "https://github.com/zakarialaoui10/rehype-plugins/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zakarialaoui10/remark-plugins.git",
+    "url": "git+https://github.com/zakarialaoui10/rehype-plugins.git",
     "directory": "packages/mind-elixir"
   },
   "publishConfig": {

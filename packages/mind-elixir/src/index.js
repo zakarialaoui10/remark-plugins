@@ -1,80 +1,122 @@
-import { visit } from 'unist-util-visit'
-import { parse, parseAllDocuments } from "yaml";
-import {
-  escapeHtmlAttribute,
-  splitDocuments,
-  parseMindBody,
-} from './utils.js'
+import { visit } from "unist-util-visit";
+import { parse } from "yaml";
 
-const remarkMindElixir = ({
-  useCdn = true,
-} = {}) => {
+import { escapeHtmlAttribute, splitDocuments, parseMindBody } from "./utils.js";
+
+const rehypeMindElixir = ({ useCdn = true } = {}) => {
   return function transformer(tree) {
-    let hasElixirMind = false
+    let hasElixirMind = false;
 
-    visit(tree, 'code', (node, index, parent) => {
-      if (node.lang !== 'mind-elixir') return
+    visit(tree, "element", (node, index, parent) => {
+      if (node.tagName !== "pre" || !node.children?.length) {
+        return;
+      }
+
+      const code = node.children.find(
+        (child) => child.type === "element" && child.tagName === "code",
+      );
+
+      if (!code) return;
+
+      const className = code.properties?.className || [];
+
+      const classes = Array.isArray(className) ? className : [className];
+
+      if (!classes.includes("language-mind-elixir")) {
+        return;
+      }
 
       hasElixirMind = true;
-      let config = {}, body = null;
 
-      const documents = splitDocuments(node.value.trim());
-      if (documents.length === 1) body = parseMindBody(documents[0])
-      else {
-        config = parse(documents[0])
-        body = parseMindBody(documents[1])
+      // Extract the text contained in <code>
+      const value = code.children
+        .filter((child) => child.type === "text")
+        .map((child) => child.value)
+        .join("");
+
+      let config = {};
+      let body = null;
+
+      const documents = splitDocuments(value.trim());
+
+      if (documents.length === 1) {
+        body = parseMindBody(documents[0]);
+      } else {
+        config = parse(documents[0]);
+        body = parseMindBody(documents[1]);
       }
 
-      const serialized_body = JSON.stringify(body, (key, value) => {
-        if (key === 'parent') return undefined
-        return value
-      })
-      const serialized_config = JSON.stringify(config)
+      const serializedBody = JSON.stringify(body, (key, value) => {
+        if (key === "parent") return undefined;
+        return value;
+      });
 
-      const encoded_body = escapeHtmlAttribute(serialized_body)
-      const encoded_config = escapeHtmlAttribute(serialized_config)
+      const serializedConfig = JSON.stringify(config);
 
       parent.children[index] = {
-        type: 'html',
-        value: `
-<div
-  data-mind-elixir
-  data-xmind-body="${encoded_body}"
-  data-xmind-config="${encoded_config}"
-></div>
-`
-      }
-    })
+        type: "element",
+        tagName: "div",
+        properties: {
+          "data-mind-elixir": "",
+          "data-xmind-body": serializedBody,
+          "data-xmind-config": serializedConfig,
+        },
+        children: [],
+      };
+    });
 
-    if (!hasElixirMind) return
-
-    if (useCdn) {
-      tree.children.push({
-        type: 'html',
-        value: `<style>\n@import url('https://esm.sh/mind-elixir/style')\n</style>`
-      })
-
-      tree.children.push({
-        type: 'html',
-        value: `
-<script type="module" data-engine="zikojs, remark, mind-elixir">
-import { MindMap } from 'https://esm.sh/@zikojs/mind-elixir@latest/src/mind/main.js'
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('[data-mind-elixir]').forEach((element) => {
-        const body = element.dataset.xmindBody
-        const config = element.dataset?.xmindConfig
-        if (!body) return
-        const nodeData = JSON.parse(body)
-        const nodeConfig = JSON.parse(config)
-        const map = MindMap({height : '400px', ...nodeConfig}, nodeData)
-        map.mount(element)
-    })
-})
-</script>
-`
-      })
+    if (!hasElixirMind || !useCdn) {
+      return;
     }
-  }
-}
 
-export default remarkMindElixir
+    tree.children.push({
+      type: "element",
+      tagName: "style",
+      properties: {},
+      children: [
+        {
+          type: "text",
+          value: "@import url('https://esm.sh/mind-elixir/style')",
+        },
+      ],
+    });
+
+    tree.children.push({
+      type: "element",
+      tagName: "script",
+      properties: {
+        type: "module",
+        "data-engine": "zikojs, rehype, mind-elixir",
+      },
+      children: [
+        {
+          type: "text",
+          value: `
+import { MindMap } from 'https://esm.sh/@zikojs/mind-elixir@latest/src/mind/main.js'
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-mind-elixir]').forEach((element) => {
+    const body = element.dataset.xmindBody
+    const config = element.dataset.xmindConfig
+
+    if (!body) return
+
+    const nodeData = JSON.parse(body)
+    const nodeConfig = JSON.parse(config)
+
+    const map = MindMap(
+      { height: '400px', ...nodeConfig },
+      nodeData
+    )
+
+    map.mount(element)
+  })
+})
+`,
+        },
+      ],
+    });
+  };
+};
+
+export default rehypeMindElixir;
