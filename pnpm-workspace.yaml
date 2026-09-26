@@ -14,6 +14,7 @@ catalog:
   "@rollup/pluginutils": ^5.4.0
   unified : latest
   remark-parse : latest
+  remark-rehype : latest
 
 minimumReleaseAgeExclude:
   - ziko@2.0.0-beta.15.1

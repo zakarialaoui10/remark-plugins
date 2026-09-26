@@ -1,12 +1,12 @@
-# ZikoJS Remark Plugins
+# ZikoJS Rehype Plugins
 
-A collection of [remark](https://github.com/remarkjs/remark) plugins for embedding interactive and structured content in Markdown, built on top of [ZikoJS](https://github.com/zikojs).
+A collection of [rehype](https://github.com/rehypejs/rehype) plugins for embedding interactive and structured content in HTML generated from Markdown, built on top of [ZikoJS](https://github.com/zikojs).
 
 ## Plugins
 
 |Plugin|Description|
 |-|-|
-|`remark-mind-elixir`| Embed interactive **MindElixir** mind maps in Markdown. |
+|`rehype-mind-elixir` | Embed interactive **Mind Elixir** mind maps in Markdown.|
 
 > More plugins are planned for diagrams, visualizations, 3D scenes, and other interactive content.
 
@@ -15,19 +15,25 @@ A collection of [remark](https://github.com/remarkjs/remark) plugins for embeddi
 Install the plugin you need:
 
 ```bash
-npm install remark-mind-elixir
+npm install rehype-mind-elixir
 ```
 
 ## Usage
 
-Use the plugins with any [unified](https://unifiedjs.com/) / remark-compatible pipeline.
+Use the plugins with any [unified](https://unifiedjs.com/) / rehype-compatible pipeline.
 
 ```js
-import { remark } from 'remark'
-import remarkMindElixir from 'remark-mind-elixir'
+import { unified } from 'unified'
+import remarkParse from 'remark-parse'
+import remarkRehype from 'remark-rehype'
+import rehypeMindElixir from 'rehype-mind-elixir'
+import rehypeStringify from 'rehype-stringify'
 
-const file = await remark()
-  .use(remarkMindElixir)
+const file = await unified()
+  .use(remarkParse)
+  .use(remarkRehype)
+  .use(rehypeMindElixir)
+  .use(rehypeStringify)
   .process(markdown)
 
 console.log(String(file))
@@ -37,32 +43,26 @@ console.log(String(file))
 
 Plugins can introduce their own fenced Markdown syntax.
 
-For example, `remark-mind-elixir` uses the `mind-elixir` code block:
+For example, `rehype-mind-elixir` uses the `mind-elixir` code block:
 
 ````markdown
 ```mind-elixir
-root:
-  topic: JavaScript
-  children:
-    - topic: Browser
-    - topic: Node.js
+topic: JavaScript
+children:
+  - topic: Browser
+  - topic: Node.js
 ```
 ````
 
-The plugin transforms the block into an interactive MindElixir mind map.
+The Markdown is converted to HAST before `rehype-mind-elixir` processes the resulting HTML tree and transforms the code block into an interactive Mind Elixir map.
 
 ## Ecosystem
 
-These plugins are designed to work with the broader Markdown ecosystem:
+These plugins are designed to work with the broader unified ecosystem, including:
 
-* [Remark](https://github.com/remarkjs/remark)
-* [Unified](https://unifiedjs.com/)
-* [MDX](https://mdxjs.com/)
-* [Astro](https://astro.build/)
-* [Vite](https://vite.dev/)
+* [Astro](https://astro.build/) — Markdown and content processing
+* [MDX](https://mdxjs.com/) — Markdown with JSX
+* [Unified](https://unifiedjs.com/) — content transformation ecosystem
+* [Vite](https://vite.dev/) — build tooling
 
-ZikoJS provides the underlying components and utilities used by the plugins, while the remark plugins themselves are designed to remain usable in any compatible remark environment.
-
-## License
-
-MIT
+ZikoJS provides the components and utilities used by the plugins, while the plugins remain usable in compatible rehype environments.

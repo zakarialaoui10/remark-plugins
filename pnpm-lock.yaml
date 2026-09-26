@@ -205,6 +205,9 @@ settings:
 
 catalogs:
   default:
+    remark-rehype:
+      specifier: latest
+      version: 11.1.2
     unified:
       specifier: latest
       version: 11.0.5
@@ -250,18 +253,12 @@ importers:
       '@zikojs/mind-elixir':
         specifier: ^0.6.2
         version: 0.6.2
-      hast-util-from-html-isomorphic:
-        specifier: ^2.0.0
-        version: 2.0.0
       mind-elixir:
         specifier: 6.0.0-next.4
         version: 6.0.0-next.4
       unist-util-visit:
         specifier: ^5.1.0
         version: 5.1.0
-      unist-util-visit-parents:
-        specifier: ^6.0.2
-        version: 6.0.2
       yaml:
         specifier: ^2.9.1
         version: 2.9.1
@@ -269,6 +266,9 @@ importers:
         specifier: 'catalog:'
         version: 2.0.0-beta.15.1
     devDependencies:
+      remark-rehype:
+        specifier: 'catalog:'
+        version: 11.1.2
       unified:
         specifier: 'catalog:'
         version: 11.0.5
@@ -1403,12 +1403,6 @@ packages:
 
   hast-util-format@1.1.0:
     resolution: {integrity: sha512-yY1UDz6bC9rDvCWHpx12aIBGRG7krurX0p0Fm6pT547LwDIZZiNr8a+IHDogorAdreULSEzP82Nlv5SZkHZcjA==}
-
-  hast-util-from-dom@5.0.1:
-    resolution: {integrity: sha512-N+LqofjR2zuzTjCPzyDUdSshy4Ma6li7p/c3pA78uTwzFgENbgbUrm2ugwsOdcjI1muO+o6Dgzp9p8WHtn/39Q==}
-
-  hast-util-from-html-isomorphic@2.0.0:
-    resolution: {integrity: sha512-zJfpXq44yff2hmE0XmwEOzdWin5xwH+QIhMLOScpX91e/NSGPsAzNCvLQDIEPyO2TXi+lBmU6hjLIhV8MwP2kw==}
 
   hast-util-from-html@2.0.3:
     resolution: {integrity: sha512-CUSRHXyKjzHov8yKsQjGOElXy/3EKpyX56ELnkHH34vDVw1N1XSQ1ZcAvTyAPtGqLTuKP/uxM+aLkSPqF/EtMw==}
@@ -3464,19 +3458,6 @@ snapshots:
       hast-util-whitespace: 3.0.0
       html-whitespace-sensitive-tag-names: 3.0.1
       unist-util-visit-parents: 6.0.2
-
-  hast-util-from-dom@5.0.1:
-    dependencies:
-      '@types/hast': 3.0.5
-      hastscript: 9.0.1
-      web-namespaces: 2.0.1
-
-  hast-util-from-html-isomorphic@2.0.0:
-    dependencies:
-      '@types/hast': 3.0.5
-      hast-util-from-dom: 5.0.1
-      hast-util-from-html: 2.0.3
-      unist-util-remove-position: 5.0.0
 
   hast-util-from-html@2.0.3:
     dependencies:

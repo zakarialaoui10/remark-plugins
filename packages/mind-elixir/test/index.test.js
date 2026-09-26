@@ -1,17 +1,17 @@
 import { describe, expect, it } from 'vitest'
 import { unified } from 'unified'
 import remarkParse from 'remark-parse'
-import remarkMindElixir from 'remark-mind-elixir'
+import remarkRehype from 'remark-rehype'
+import rehypeMindElixir from '../src/index.js'
 
 const processMarkdown = (markdown, options = {}) => {
   const processor = unified()
     .use(remarkParse)
-    .use(remarkMindElixir, options)
+    .use(remarkRehype)
+    .use(rehypeMindElixir, options)
 
-  const tree = processor.parse(markdown)
-  processor.runSync(tree)
-
-  return tree
+  const mdast = processor.parse(markdown)
+  return processor.runSync(mdast)
 }
 
 const mindElixirMarkdown = `
@@ -22,20 +22,29 @@ children:
 \`\`\`
 `
 
-describe('remarkMindElixir', () => {
-  it('transforms a mind-elixir code block into an HTML node', () => {
+const getMindMaps = (tree) =>
+  tree.children.filter(
+    node =>
+      node.type === 'element' &&
+      node.tagName === 'div' &&
+      node.properties &&
+      'data-mind-elixir' in node.properties
+  )
+
+describe('rehypeMindElixir', () => {
+  it('transforms a mind-elixir code block into a Mind Elixir element', () => {
     const tree = processMarkdown(mindElixirMarkdown)
 
-    const htmlNode = tree.children.find(
-      node =>
-        node.type === 'html' &&
-        node.value.includes('data-mind-elixir')
-    )
+    const mindMaps = getMindMaps(tree)
 
-    expect(htmlNode).toBeDefined()
-    expect(htmlNode.value).toContain('data-mind-elixir')
-    expect(htmlNode.value).toContain('data-xmind-body')
-    expect(htmlNode.value).toContain('data-xmind-config')
+    expect(mindMaps).toHaveLength(1)
+
+    const mindMap = mindMaps[0]
+
+    expect(mindMap.tagName).toBe('div')
+    expect(mindMap.properties).toHaveProperty('data-mind-elixir')
+    expect(mindMap.properties).toHaveProperty('data-xmind-body')
+    expect(mindMap.properties).toHaveProperty('data-xmind-config')
   })
 
   it('does not transform other code blocks', () => {
@@ -45,21 +54,24 @@ console.log('hello')
 \`\`\`
 `)
 
-    expect(
-      tree.children.some(
-        node =>
-          node.type === 'html' &&
-          node.value.includes('data-mind-elixir')
-      )
-    ).toBe(false)
+    expect(getMindMaps(tree)).toHaveLength(0)
 
-    expect(
-      tree.children.some(
-        node =>
-          node.type === 'code' &&
-          node.lang === 'js'
-      )
-    ).toBe(true)
+    const pre = tree.children.find(
+      node =>
+        node.type === 'element' &&
+        node.tagName === 'pre'
+    )
+
+    expect(pre).toBeDefined()
+
+    const code = pre.children.find(
+      node =>
+        node.type === 'element' &&
+        node.tagName === 'code'
+    )
+
+    expect(code).toBeDefined()
+    expect(code.properties.className).toContain('language-js')
   })
 
   it('supports a mind-elixir block with configuration', () => {
@@ -75,34 +87,35 @@ children:
 \`\`\`
 `)
 
-    const htmlNode = tree.children.find(
-      node =>
-        node.type === 'html' &&
-        node.value.includes('data-mind-elixir')
-    )
+    const mindMaps = getMindMaps(tree)
 
-    expect(htmlNode).toBeDefined()
-    expect(htmlNode.value).toContain('data-xmind-body')
-    expect(htmlNode.value).toContain('data-xmind-config')
+    expect(mindMaps).toHaveLength(1)
+
+    const mindMap = mindMaps[0]
+
+    expect(mindMap.properties).toHaveProperty('data-xmind-body')
+    expect(mindMap.properties).toHaveProperty('data-xmind-config')
+
+    expect(
+      mindMap.properties['data-xmind-config']
+    ).toContain('direction')
+
+    expect(
+      mindMap.properties['data-xmind-config']
+    ).toContain('600px')
   })
 
   it('removes parent properties from serialized mind map data', () => {
     const tree = processMarkdown(mindElixirMarkdown)
 
-    const htmlNode = tree.children.find(
-      node =>
-        node.type === 'html' &&
-        node.value.includes('data-mind-elixir')
-    )
+    const mindMap = getMindMaps(tree)[0]
 
-    expect(htmlNode).toBeDefined()
+    expect(mindMap).toBeDefined()
 
-    const match = htmlNode.value.match(
-      /data-xmind-body="([^"]+)"/
-    )
+    const body = mindMap.properties['data-xmind-body']
 
-    expect(match).toBeTruthy()
-    expect(match[1]).not.toContain('parent')
+    expect(body).toBeDefined()
+    expect(body).not.toContain('parent')
   })
 
   it('injects CDN assets when useCdn is true', () => {
@@ -112,22 +125,34 @@ children:
 
     const styleNode = tree.children.find(
       node =>
-        node.type === 'html' &&
-        node.value.includes('mind-elixir/style')
+        node.type === 'element' &&
+        node.tagName === 'style' &&
+        node.children.some(
+          child =>
+            child.type === 'text' &&
+            child.value.includes('mind-elixir/style')
+        )
     )
 
     const scriptNode = tree.children.find(
       node =>
-        node.type === 'html' &&
-        node.value.includes('@zikojs/mind-elixir')
+        node.type === 'element' &&
+        node.tagName === 'script' &&
+        node.children.some(
+          child =>
+            child.type === 'text' &&
+            child.value.includes('@zikojs/mind-elixir')
+        )
     )
 
     expect(styleNode).toBeDefined()
     expect(scriptNode).toBeDefined()
 
-    expect(scriptNode.value).toContain(
-      'data-engine="zikojs, remark, mind-elixir"'
-    )
+    expect(scriptNode.properties.type).toBe('module')
+
+    expect(
+      scriptNode.properties['data-engine']
+    ).toBe('zikojs, rehype, mind-elixir')
   })
 
   it('does not inject CDN assets when useCdn is false', () => {
@@ -135,21 +160,30 @@ children:
       useCdn: false,
     })
 
-    expect(
-      tree.children.some(
-        node =>
-          node.type === 'html' &&
-          node.value.includes('mind-elixir/style')
-      )
-    ).toBe(false)
+    const styleNode = tree.children.find(
+      node =>
+        node.type === 'element' &&
+        node.tagName === 'style' &&
+        node.children.some(
+          child =>
+            child.type === 'text' &&
+            child.value.includes('mind-elixir/style')
+        )
+    )
 
-    expect(
-      tree.children.some(
-        node =>
-          node.type === 'html' &&
-          node.value.includes('@zikojs/mind-elixir')
-      )
-    ).toBe(false)
+    const scriptNode = tree.children.find(
+      node =>
+        node.type === 'element' &&
+        node.tagName === 'script' &&
+        node.children.some(
+          child =>
+            child.type === 'text' &&
+            child.value.includes('@zikojs/mind-elixir')
+        )
+    )
+
+    expect(styleNode).toBeUndefined()
+    expect(scriptNode).toBeUndefined()
   })
 
   it('does not modify the tree when no mind-elixir block exists', () => {
@@ -163,25 +197,26 @@ console.log('hello')
 \`\`\`
 `)
 
-    expect(
-      tree.children.some(
-        node =>
-          node.type === 'html' &&
-          node.value.includes('data-mind-elixir')
-      )
-    ).toBe(false)
+    expect(getMindMaps(tree)).toHaveLength(0)
 
-    expect(
-      tree.children.some(
-        node =>
-          node.type === 'html' &&
-          node.value.includes('mind-elixir/style')
-      )
-    ).toBe(false)
+    const styleNode = tree.children.find(
+      node =>
+        node.type === 'element' &&
+        node.tagName === 'style'
+    )
+
+    const scriptNode = tree.children.find(
+      node =>
+        node.type === 'element' &&
+        node.tagName === 'script'
+    )
+
+    expect(styleNode).toBeUndefined()
+    expect(scriptNode).toBeUndefined()
   })
 
   it('can transform multiple mind-elixir blocks', () => {
-  const tree = processMarkdown(`
+    const tree = processMarkdown(`
 \`\`\`mind-elixir
 topic: First
 children:
@@ -197,22 +232,21 @@ children:
 \`\`\`
 `)
 
-  const mindMaps = tree.children.filter(
-    node =>
-      node.type === 'html' &&
-      node.value.includes('<div') &&
-      node.value.includes('data-mind-elixir')
-  )
+    const mindMaps = getMindMaps(tree)
 
-  expect(mindMaps).toHaveLength(2)
+    expect(mindMaps).toHaveLength(2)
 
-  const scripts = tree.children.filter(
-    node =>
-      node.type === 'html' &&
-      node.value.includes('<script') &&
-      node.value.includes('@zikojs/mind-elixir')
-  )
+    const scripts = tree.children.filter(
+      node =>
+        node.type === 'element' &&
+        node.tagName === 'script' &&
+        node.children.some(
+          child =>
+            child.type === 'text' &&
+            child.value.includes('@zikojs/mind-elixir')
+        )
+    )
 
-  expect(scripts).toHaveLength(1)
-})
+    expect(scripts).toHaveLength(1)
+  })
 })

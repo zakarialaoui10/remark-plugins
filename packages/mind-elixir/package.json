@@ -1,6 +1,6 @@
 {
   "name": "rehype-mind-elixir",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A rehype plugin for embedding interactive Mind Elixir mind maps in Markdown.",
   "keywords": [
     "zikojs",
@@ -43,17 +43,16 @@
   "type": "module",
   "dependencies": {
     "@zikojs/mind-elixir": "^0.6.2",
-    "hast-util-from-html-isomorphic": "^2.0.0",
     "mind-elixir": "6.0.0-next.4",
     "unist-util-visit": "^5.1.0",
-    "unist-util-visit-parents": "^6.0.2",
     "yaml": "^2.9.1",
     "ziko": "catalog:"
   },
   "devDependencies": {
-    "unified": "catalog:"
+    "unified": "catalog:",
+    "remark-rehype": "catalog:"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "pnpx vitest"
   }
 }
