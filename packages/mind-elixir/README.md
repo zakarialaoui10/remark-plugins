@@ -2,7 +2,7 @@
 
 A [remark](https://github.com/remarkjs/remark) plugin for embedding interactive [Mind Elixir](https://docs.mind-elixir.com/) mind maps in Markdown.
 
-It lets you define mind maps using YAML inside `elixir-mind` fenced code blocks and transforms them into interactive Mind Elixir maps.
+It lets you define mind maps using YAML inside `mind-elixir` fenced code blocks and transforms them into interactive Mind Elixir maps.
 
 ## Features
 
@@ -29,7 +29,7 @@ import remarkMindElixir from 'remark-mind-elixir'
 const markdown = `
 # My Mind Map
 
-\`\`\`elixir-mind
+\`\`\`mind-elixir
 root:
   topic: JavaScript
   children:
@@ -67,12 +67,12 @@ export default defineConfig({
 })
 ```
 
-You can then use `elixir-mind` blocks directly in your Markdown or MDX pages:
+You can then use `mind-elixir` blocks directly in your Markdown or MDX pages:
 
 ````markdown
 # JavaScript
 
-```elixir-mind
+```mind-elixir
 root:
   topic: JavaScript
   children:
@@ -112,10 +112,10 @@ When `useCdn` is disabled, your application must provide the Mind Elixir client 
 
 ## Markdown Syntax
 
-Use an `elixir-mind` fenced code block:
+Use an `mind-elixir` fenced code block:
 
 ````markdown
-```elixir-mind
+```mind-elixir
 root:
   topic: JavaScript
   children:
@@ -134,7 +134,7 @@ A configuration document can optionally be placed before the mind-map data.
 Separate the configuration and data using `---`:
 
 ````markdown
-```elixir-mind
+```mind-elixir
 ---
 direction: right
 ---
@@ -151,12 +151,12 @@ The first YAML document is interpreted as plugin configuration, while the second
 
 ## Multiple Mind Maps
 
-A Markdown document can contain multiple `elixir-mind` blocks:
+A Markdown document can contain multiple `mind-elixir` blocks:
 
 ````markdown
 # Frontend
 
-```elixir-mind
+```mind-elixir
 root:
   topic: Frontend
   children:
@@ -167,7 +167,7 @@ root:
 
 # Backend
 
-```elixir-mind
+```mind-elixir
 root:
   topic: Backend
   children:
@@ -211,7 +211,7 @@ The generated HTML contains a container similar to:
 
 ```html
 <div
-  data-elixir-mind
+  data-mind-elixir
   data-xmind-body="..."
   data-xmind-config="..."
 ></div>
@@ -230,7 +230,7 @@ remark
    ▼
 remark-mind-elixir
    │
-   ├── Find `elixir-mind` blocks
+   ├── Find `mind-elixir` blocks
    │
    ├── Parse YAML
    │

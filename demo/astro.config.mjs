@@ -1,12 +1,19 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
-import MindElixir from 'remark-mind-elixir'
+import remarkElixirMind from 'remark-mind-elixir'
+// import { createMarkdownProcessor } from '@astrojs/markdown-remark'
+
 
 // https://astro.build/config
 export default defineConfig({
 	markdown:{
-		remarkPlugins:[MindElixir()]
+		remarkPlugins: [
+          remarkElixirMind,
+        ],
+        // rehypePlugins: [
+        //    remarkElixirMind,
+        // ],
 	},
 	integrations: [
 		starlight({

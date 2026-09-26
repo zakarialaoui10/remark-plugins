@@ -1,7 +1,7 @@
 import { MindMap } from '@zikojs/mind-elixir/no-css'
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('[data-elixir-mind]').forEach((element) => {
+    document.querySelectorAll('[data-mind-elixir]').forEach((element) => {
         const body = element.dataset.xmindBody
         const config = element.dataset?.xmindConfig
 

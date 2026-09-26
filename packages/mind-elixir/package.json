@@ -4,7 +4,7 @@
   "description": "A remark plugin for embedding interactive Mind Elixir mind maps in Markdown.",
   "keywords": [
     "zikojs",
-    "remark",
+    "rehype",
     "unified",
     "markdown",
     "mindmap",
@@ -30,6 +30,9 @@
     },
     "./client": {
       "import": "./src/client.js"
+    },
+    "./rehype": {
+      "import": "./src/rehype.js"
     },
     "./style": {
       "import": "./src/style.css"

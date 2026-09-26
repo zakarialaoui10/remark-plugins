@@ -37,10 +37,10 @@ console.log(String(file))
 
 Plugins can introduce their own fenced Markdown syntax.
 
-For example, `remark-mind-elixir` uses the `elixir-mind` code block:
+For example, `remark-mind-elixir` uses the `mind-elixir` code block:
 
 ````markdown
-```elixir-mind
+```mind-elixir
 root:
   topic: JavaScript
   children:

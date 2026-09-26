@@ -1,16 +1,18 @@
 import { visit } from 'unist-util-visit'
 import { parse, parseAllDocuments } from "yaml";
-
-import { yaml2MindElixirData } from '@zikojs/mind-elixir/utils'
-
-const remarkElixirMind = ({
+import {
+  escapeHtmlAttribute,
+  splitDocuments,
+  parseMindBody,
+} from './utils.js'
+const remarkMindElixir = ({
   useCdn = true,
-} = {}) => () => {
+} = {}) => {
   return function transformer(tree) {
     let hasElixirMind = false
 
     visit(tree, 'code', (node, index, parent) => {
-      if (node.lang !== 'elixir-mind') return
+      if (node.lang !== 'mind-elixir') return
 
       hasElixirMind = true;
       let config = {}, body = null;
@@ -38,7 +40,7 @@ const remarkElixirMind = ({
         type: 'html',
         value: `
 <div
-  data-elixir-mind
+  data-mind-elixir
   data-xmind-body="${encoded_body}"
   data-xmind-config="${encoded_config}"
 ></div>
@@ -58,7 +60,7 @@ const remarkElixirMind = ({
 <script type="module" data-engine="zikojs, remark, mind-elixir">
 import { MindMap } from 'https://esm.sh/@zikojs/mind-elixir@latest/src/mind/main.js'
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('[data-elixir-mind]').forEach((element) => {
+    document.querySelectorAll('[data-mind-elixir]').forEach((element) => {
         const body = element.dataset.xmindBody
         const config = element.dataset?.xmindConfig
         if (!body) return
@@ -75,99 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 }
 
-function escapeHtmlAttribute(value) {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/"/g, '&quot;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-}
 
-export default remarkElixirMind
 
-const splitDocuments = (text) => {
-  const documents = []
-  let current = ''
+export default remarkMindElixir
 
-  let quote = null
-  let escaped = false
-
-  const lines = text.trim().split('\n')
-
-  for (const line of lines) {
-    const isSeparator = line.match(/^---[ \t]*$/)
-
-    if (isSeparator && !quote) {
-      if (current.trim()) {
-        documents.push(current.trim())
-      }
-      current = ''
-      continue
-    }
-
-    current += (current ? '\n' : '') + line
-
-    // Track JS string state
-    for (let i = 0; i < line.length; i++) {
-      const char = line[i]
-
-      if (escaped) {
-        escaped = false
-        continue
-      }
-
-      if (char === '\\') {
-        escaped = true
-        continue
-      }
-
-      if (quote) {
-        if (char === quote) {
-          quote = null
-        }
-      } else if (
-        char === "'" ||
-        char === '"' ||
-        char === '`'
-      ) {
-        quote = char
-      }
-    }
-  }
-
-  if (current.trim()) {
-    documents.push(current.trim())
-  }
-
-  return documents
-}
-
-// const parseMindBody = (text) => {
-//   try {
-//     return JSON.parse(text)
-//   } catch {
-//     return yaml2MindElixirData(text)
-//   }
-// }
-
-const parseMindBody = (text) => {
-  const trimmed = text.trim()
-
-  // JSON
-  try {
-    return JSON.parse(trimmed)
-  } catch {}
-
-  // JavaScript object/array
-  if (
-    trimmed.startsWith('{') ||
-    trimmed.startsWith('[')
-  ) {
-    try {
-      return Function(`"use strict"; return (${trimmed})`)()
-    } catch {}
-  }
-
-  // YAML
-  return yaml2MindElixirData(trimmed)
-}
